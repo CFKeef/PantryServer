@@ -66,8 +66,6 @@ app.get("/activation", (req, res) => {
                     return res.sendStatus(403);
                 }
                 else {
-                    console.log(decoded.exp * 1000);
-                    console.log(Date.now())
                     // Took too long to activate
                     if(decoded.exp * 1000 < Date.now()) return res.sendStatus(403);
                     else {
