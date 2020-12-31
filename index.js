@@ -31,8 +31,14 @@ app.post("/signup", async (req, res) => {
     else res.sendStatus(400)
 });
 
-app.post("/login", (req, res) => {
-    
+app.post("/login", async (req, res) => {
+    const userInfo = req.body;
+    const isValid = await pg.validateUserLogin(userInfo.email, userInfo.pw)
+
+    if(isValid) {
+        res.sendStatus(200);
+    }
+    else res.sendStatus(403);
 });
 
 app.post("/recover", (req, res) => {
@@ -56,7 +62,7 @@ app.post("/setProducts", (req, res) => {
 
 });
 
-app.get("/activation", (req, res) => {
+app.post("/activation", (req, res) => {
     const token = req.query.id;
 
     if(token) {
@@ -70,7 +76,7 @@ app.get("/activation", (req, res) => {
                     if(decoded.exp * 1000 < Date.now()) return res.sendStatus(403);
                     else {
                         pg.updateUserVerifiedFlag(decoded.id);
-                        res.sendStatus(200);
+                        res.redirect("/")
                     }
                 }
             })

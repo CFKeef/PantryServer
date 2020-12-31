@@ -69,5 +69,15 @@ const updateUserVerifiedFlag = async (userID) => {
     return new Promise(async (resolve) => {
         resolve(await db.any('UPDATE Pantry.Account SET verified = true where id = $1', [userID]));
     })
+};
+
+const validateUserLogin = async (email, pw) => {
+    return db.any('Select * from Pantry.Account where emailaddress = $1 and verified = $2', [email, true])
+    .then(data => {
+        return bcrypt.compare(pw, data[0].password).then((result) =>{
+            return result;
+        });
+    })
 }
-module.exports = {addUser, verifyUniqueEmail, addPantry, getIDsForActivation, updateUserVerifiedFlag};
+
+module.exports = {addUser, verifyUniqueEmail, addPantry, getIDsForActivation, updateUserVerifiedFlag, validateUserLogin};
