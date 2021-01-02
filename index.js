@@ -36,7 +36,10 @@ app.post("/login", async (req, res) => {
     const isValid = await pg.validateUserLogin(userInfo.email, userInfo.pw)
 
     if(isValid) {
-        res.sendStatus(200);
+        const accountData = await pg.getIDsForActivation(userInfo.email);
+        const pantryData = await pg.getPantryIDs(accountData.id);
+        const data = {email: userInfo.email, accountID: accountData.id, pantryID: pantryData};
+        res.status(200).send(data);
     }
     else res.sendStatus(403);
 });
@@ -54,12 +57,26 @@ app.post("/setTabs", (req, res) => {
 
 });
 
+app.post("/addTab", async (req, res) => {
+    const isUpdated = await pg.addTab(req.body.id, req.body.location, req.body.accountID);
+
+    if(isUpdated) res.sendStatus(200);
+    else res.sendStatus(403);
+});
+
 app.get("/getProducts", (req, res) => {
 
 });
 
 app.post("/setProducts", (req, res) => {
 
+});
+
+app.post("/addProduct", async (req, res) => {
+    const isUpdated = await pg.addProduct(req.body.product, req.body.pantryID, req.body.accountID);
+
+    if(isUpdated) res.sendStatus(200);
+    else res.sendStatus(403);
 });
 
 app.post("/activation", (req, res) => {

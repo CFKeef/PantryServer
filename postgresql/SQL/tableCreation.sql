@@ -10,18 +10,19 @@ create table Pantry.Pantry(
 	AccountID INTEGER REFERENCES Pantry.Account (ID)
 );
 create table Pantry.Product(
-	ID	SERIAL PRIMARY KEY NOT NULL,
+	ID	TEXT PRIMARY KEY NOT NULL,
 	PantryID INTEGER REFERENCES Pantry.Pantry (ID),
 	Title TEXT NOT NULL,
 	CategoryID INTEGER REFERENCES Pantry.Category (ID),
-	TabID INTEGER REFERENCES Pantry.Tab (ID),
+	TabID TEXT REFERENCES Pantry.Tab (ID),
 	ExpirationDate DATE NOT NULL,
 	Quantity INTEGER NOT NULL,
 	Unit TEXT DEFAULT 'unit'
 );
 
 create table Pantry.Tab(
-	ID	SERIAL PRIMARY KEY NOT NULL,
+	ID TEXT PRIMARY KEY NOT NULL,
+	AccountID INTEGER REFERENCES Pantry.Account (ID),
 	Location TEXT NOT NULL
 );
 
