@@ -127,4 +127,13 @@ const getTabsForUser = async (accountID) => {
     });
 };
 
-module.exports = {addUser, verifyUniqueEmail, addPantry, getIDsForActivation, updateUserVerifiedFlag, validateUserLogin, addProduct,getPantryIDs, addTab, getTabsForUser};
+const getProductsForUser = async (pantryID) => {
+    return new Promise(async (resolve) => {
+        resolve(await db.result('Select Product.id, Product.title, Product.category, Product.tabid, Product.expirationDate, Product.quantity, Product.unit from Pantry.Product as Product where Product.pantryid = $1', [pantryID])
+            .then(data => {
+                return data.rows
+            }))
+    });
+};
+
+module.exports = {addUser, verifyUniqueEmail, addPantry, getIDsForActivation, updateUserVerifiedFlag, validateUserLogin, addProduct,getPantryIDs, addTab, getTabsForUser, getProductsForUser};
