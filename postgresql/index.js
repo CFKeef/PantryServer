@@ -118,5 +118,13 @@ const getTabID = async (location, accountID) => {
     });
 }
 
+const getTabsForUser = async (accountID) => {
+    return new Promise(async (resolve) => {
+        resolve(await db.result('Select Tab.id, tab.location From Pantry.Tab as Tab where Tab.accountid = $1  ' , [accountID])
+            .then(data => {
+                return data.rows
+            }))
+    });
+};
 
-module.exports = {addUser, verifyUniqueEmail, addPantry, getIDsForActivation, updateUserVerifiedFlag, validateUserLogin, addProduct,getPantryIDs, addTab};
+module.exports = {addUser, verifyUniqueEmail, addPantry, getIDsForActivation, updateUserVerifiedFlag, validateUserLogin, addProduct,getPantryIDs, addTab, getTabsForUser};

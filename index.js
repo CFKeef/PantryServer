@@ -38,7 +38,8 @@ app.post("/login", async (req, res) => {
     if(isValid) {
         const accountData = await pg.getIDsForActivation(userInfo.email);
         const pantryData = await pg.getPantryIDs(accountData.id);
-        const data = {email: userInfo.email, accountID: accountData.id, pantryID: pantryData};
+        const getTabs = await pg.getTabsForUser(accountData.id);
+        const data = {email: userInfo.email, accountID: accountData.id, pantryID: pantryData, tabs:getTabs};
         res.status(200).send(data);
     }
     else res.sendStatus(403);
@@ -49,8 +50,9 @@ app.post("/recover", (req, res) => {
 });
 
 // Data routes
-app.get("/getTabs", (req, res) => {
-
+app.get("/getTabs", async (req, res) => {
+    const getTabs = await pg.getTabsForUser(res.body.accountID);
+    console.log(getTabs)
 });
 
 app.post("/setTabs", (req, res) => {
